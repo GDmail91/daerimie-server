@@ -13,7 +13,7 @@ router.get('/:bus_num/:station_name', function(req, res, next) {
 
     var bus_model = require('../models/bus_model');
     bus_model.get_bus_station_id(data, function(result_data) {
-        if (!result_data.result) return res.send("{result:false, msg:데이터 검색실패}");
+        if (!result_data.result) return res.send({result:false, msg:result_data.msg});
 
         res.statusCode = 200;
         res.send(result_data);
