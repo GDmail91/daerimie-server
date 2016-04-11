@@ -20,6 +20,7 @@ var bus_model = {
             if (err) return callback({result: false, msg: "에러 발생. 원인: " + err});
             var select = [data.bus_num, data.station_name];
             connection.query('SELECT * FROM daelimieDB WHERE ROUTE_NM=? AND STATION_NM=?;', select, function (err, rows) {
+                if (err) return callback({result:false, msg:err});
                 connection.release();
 
                 var dummy_data = {
