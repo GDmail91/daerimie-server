@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
 
     function writeFile(str) {
         str += "\n";
-        fs.appendFile('test1.txt', str, function (err) {
+        fs.appendFile('base_info/test1.csv', str, function (err) {
             if (err) throw err;
         });
     }
