@@ -22,10 +22,10 @@ router.get('/arrival/:bus_num/:station_name', function(req, res, next) {
 
         console.log(result_data.data[0]);
         // 데이터가 있는경우 도착정보 가져오기 실행
-        getBusArrivalList(result_data.data[0].STATION_ID);
+        getBusArrivalList(result_data.data[0].STATION_ID, result_data.data[0].ROUTE_ID);
     });
 
-    var getBusArrivalList = function(station_id) {
+    var getBusArrivalList = function(station_id, route_id) {
         request.get({
             url: 'http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?serviceKey='+credentials.gbus_key,
             qs: {
@@ -43,13 +43,26 @@ router.get('/arrival/:bus_num/:station_name', function(req, res, next) {
                         msg: result.response.msgHeader[0].resultMessage
                     });
                 }
-                var bus_arrival_list = result.response.msgBody[0];
+                var bus_arrival_list = result.response.msgBody[0].busArrivalList;
 
-                res.statusCode = 200;
-                res.send({
-                    result: true,
-                    msg: "해당 버스의 도착정보를 가져옴",
-                    data: bus_arrival_list.busArrivalList
+                var length = 1;
+                bus_arrival_list.forEach(function (val, index, arr) {
+                    if (val.routeId == route_id) {
+                        res.statusCode = 200;
+                        return res.send({
+                            result: true,
+                            msg: "해당 버스의 도착정보를 가져옴",
+                            data: val
+                        });
+                    }
+                    if (length < bus_arrival_list.length) length = length + 1;
+                    else {
+                        res.statusCode = 200;
+                        res.send({
+                            result: false,
+                            msg: "아직 도착정보를 가져올 수가 없습니다."
+                        });
+                    }
                 });
             });
         });
