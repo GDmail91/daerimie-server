@@ -1,0 +1,5 @@
+# npm package ignore
+node_modules
+
+# credentials dependencies list ignore
+credentials.js
